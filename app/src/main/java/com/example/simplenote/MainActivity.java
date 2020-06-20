@@ -18,7 +18,10 @@ import android.widget.ListView;
 import com.example.simplenote.Model.DatabaseHandler;
 import com.example.simplenote.Model.Note;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
@@ -41,7 +44,16 @@ public class MainActivity extends AppCompatActivity {
         super.onOptionsItemSelected(item);
         if(item.getItemId() == R.id.add_note)
         {
+            DateFormat df = new SimpleDateFormat("EEE, d MMM yyyy, HH:mm");
+            String date = df.format(Calendar.getInstance().getTime());
+
+            Note note = new Note("",date,"No title");
+            MainActivity.noteList.add(note);
+            int id=MainActivity.noteList.size()-1;
+            handler.addNote(note);
+            MainActivity.arrayAdapter.notifyDataSetChanged();
             Intent intent= new Intent(MainActivity.this,Main2Activity.class);
+            intent.putExtra("noteId",noteList.get(id).getId());
             startActivity(intent);
             return true;
         }
@@ -52,7 +64,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         listView= (ListView) findViewById(R.id.listView);
-       handler= new DatabaseHandler(MainActivity.this);
+        handler= new DatabaseHandler(MainActivity.this);
         List<Note > list= handler.getNotes();
         noteList.addAll(list);
         arrayAdapter=new ArrayAdapter<Note>(this, android.R.layout.simple_list_item_1, noteList);
@@ -61,7 +73,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent intent= new Intent(MainActivity.this,Main2Activity.class);
-                intent.putExtra("noteId",position);
+                intent.putExtra("noteId",noteList.get(position).getId());
                 startActivity(intent);
             }
 
@@ -79,7 +91,7 @@ public class MainActivity extends AppCompatActivity {
                                 noteList.remove(position);
 
                                 arrayAdapter.notifyDataSetChanged();
-                                handler.deleteNote(position);
+                                handler.deleteNote(noteList.get(position).getId());
                             }
                         }).setNegativeButton("no",null).show();
 

@@ -34,22 +34,10 @@ public class Main2Activity extends AppCompatActivity {
         final DatabaseHandler handler=new DatabaseHandler(Main2Activity.this);
         Intent intent = getIntent();
         id= intent.getIntExtra("noteId",-1);
-        if(id != -1){
-            textView.setText("Last update: "+ MainActivity.noteList.get(id).getTime());
-            editText1.setText(MainActivity.noteList.get(id).getTitle());
-            editText.setText(MainActivity.noteList.get(id).getText());
-        }
-        else {
-            DateFormat df = new SimpleDateFormat("EEE, d MMM yyyy, HH:mm");
-            String date = df.format(Calendar.getInstance().getTime());
-            id=MainActivity.noteList.size()-1;
-            Note note = new Note("",date,"");
-            MainActivity.noteList.add(note);
-            handler.addNote(note);
-            MainActivity.arrayAdapter.notifyDataSetChanged();
-            editText.setText("");
-            editText1.setText("");
-        }
+        textView.setText("Last update: "+ MainActivity.noteList.get(id).getTime());
+        editText1.setText(MainActivity.noteList.get(id).getTitle());
+        editText.setText(MainActivity.noteList.get(id).getText());
+
         editText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {

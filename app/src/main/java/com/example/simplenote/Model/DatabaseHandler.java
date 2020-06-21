@@ -39,7 +39,19 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         db.delete(TABLE_NAME, KEY_ID + " = ?", new String[] { String.valueOf(noteId) });
         db.close();
     }
+    public Note findById(int noteId){
 
+        String query = "SELECT * FROM " + TABLE_NAME+" WHERE "+KEY_ID+" = "+String.valueOf(noteId) ;
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery(query, null);
+        cursor.moveToFirst();
+
+        Note     note = new Note(cursor.getInt(0), cursor.getString(1), cursor.getString(2),cursor.getString(3));
+
+
+
+        return note;
+    }
     public void updateNote(Note note) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();

@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.PersistableBundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -14,6 +15,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.example.simplenote.Model.DatabaseHandler;
 import com.example.simplenote.Model.Note;
@@ -48,12 +50,13 @@ public class MainActivity extends AppCompatActivity {
             String date = df.format(Calendar.getInstance().getTime());
 
             Note note = new Note("",date,"No title");
-            MainActivity.noteList.add(note);
-            int id=MainActivity.noteList.size()-1;
             handler.addNote(note);
-            MainActivity.arrayAdapter.notifyDataSetChanged();
+            List<Note> notes=handler.getNotes();
+            noteList.clear();
+            noteList.addAll(notes);
+            arrayAdapter.notifyDataSetChanged();
             Intent intent= new Intent(MainActivity.this,Main2Activity.class);
-            intent.putExtra("noteId",noteList.get(id).getId());
+            intent.putExtra("noteId",noteList.size());
             startActivity(intent);
             return true;
         }
@@ -65,7 +68,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         listView= (ListView) findViewById(R.id.listView);
         handler= new DatabaseHandler(MainActivity.this);
-        List<Note > list= handler.getNotes();
+        List<Note >  list = handler.getNotes();
+        noteList.clear();
         noteList.addAll(list);
         arrayAdapter=new ArrayAdapter<Note>(this, android.R.layout.simple_list_item_1, noteList);
         listView.setAdapter(arrayAdapter);
@@ -84,14 +88,16 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, long id) {
                 final int itemDelete=position;
+                Toast.makeText(MainActivity.this,String.valueOf(noteList.get(itemDelete).getId()),Toast.LENGTH_SHORT).show();
                 new AlertDialog.Builder(MainActivity.this).setIcon(android.R.drawable.ic_dialog_alert).setTitle("Are you sure delete this note?")
                         .setPositiveButton("yes", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                noteList.remove(position);
 
+                                handler.deleteNote(noteList.get(itemDelete).getId());
+                                noteList.remove(itemDelete);
                                 arrayAdapter.notifyDataSetChanged();
-                                handler.deleteNote(noteList.get(position).getId());
+
                             }
                         }).setNegativeButton("no",null).show();
 

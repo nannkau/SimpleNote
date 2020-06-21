@@ -14,7 +14,9 @@ import com.example.simplenote.Model.Note;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 
 public class Main2Activity extends AppCompatActivity {
 
@@ -23,6 +25,7 @@ public class Main2Activity extends AppCompatActivity {
     int id;
     EditText editText1;
     TextView textView1;
+    Note note;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -34,9 +37,11 @@ public class Main2Activity extends AppCompatActivity {
         final DatabaseHandler handler=new DatabaseHandler(Main2Activity.this);
         Intent intent = getIntent();
         id= intent.getIntExtra("noteId",-1);
-        textView.setText("Last update: "+ MainActivity.noteList.get(id).getTime());
-        editText1.setText(MainActivity.noteList.get(id).getTitle());
-        editText.setText(MainActivity.noteList.get(id).getText());
+        List<Note >  list = handler.getNotes();
+         note= handler.findById(id);
+        textView.setText("Last update: "+note.getTime());
+        editText1.setText(note.getTitle());
+        editText.setText(note.getText());
 
         editText.addTextChangedListener(new TextWatcher() {
             @Override
@@ -49,9 +54,15 @@ public class Main2Activity extends AppCompatActivity {
 
                 DateFormat df = new SimpleDateFormat("EEE, d MMM yyyy, HH:mm");
                 String date = df.format(Calendar.getInstance().getTime());
-                Note note= new Note(id,String.valueOf(s),date,editText1.getText().toString() );
-                MainActivity.noteList.set(id,note);
+                //Note note= new Note(MainActivity.noteList.get(id).getId(),String.valueOf(s),date,editText1.getText().toString() );
+                note.setText(String.valueOf(s));
+                note.setTime(date);
+                note.setTitle(editText1.getText().toString() );
+                //MainActivity.noteList.set(id-1,note);
                 handler.updateNote(note);
+                List<Note >  list = handler.getNotes();
+                MainActivity.noteList.clear();
+                MainActivity.noteList.addAll(list);
                 MainActivity.arrayAdapter.notifyDataSetChanged();
 
             }
@@ -72,9 +83,15 @@ public class Main2Activity extends AppCompatActivity {
 
                 DateFormat df = new SimpleDateFormat("EEE, d MMM yyyy, HH:mm");
                 String date = df.format(Calendar.getInstance().getTime());
-                Note note= new Note(editText.getText().toString(),date,String.valueOf(s) );
-                MainActivity.noteList.set(id,note);
+//                Note note= new Note(MainActivity.noteList.get(id).getId(),editText.getText().toString(),date,String.valueOf(s) );
+//                MainActivity.noteList.set(id,note);
+                note.setTitle(String.valueOf(s));
+                note.setTime(date);
+                note.setText(editText.getText().toString() );
                 handler.updateNote(note);
+                List<Note >  list = handler.getNotes();
+                MainActivity.noteList.clear();
+                MainActivity.noteList.addAll(list);
                 MainActivity.arrayAdapter.notifyDataSetChanged();
 
             }

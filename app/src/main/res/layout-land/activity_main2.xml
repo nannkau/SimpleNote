@@ -8,12 +8,13 @@
 
     <TextView
         android:id="@+id/textView"
-        android:layout_width="wrap_content"
+        android:layout_width="180dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
         android:layout_marginTop="20dp"
-        android:text="hahaaaaaaaaa"
-        android:textSize="25dp"
+        android:textSize="15dp"
+        android:lines="3"
+        android:maxLines="3"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/constraintLayout" />
 
@@ -21,7 +22,7 @@
         android:id="@+id/constraintLayout"
         android:layout_width="503dp"
         android:layout_height="317dp"
-        android:layout_marginStart="20dp"
+        android:layout_marginStart="5dp"
         android:layout_marginTop="40dp"
         android:background="@drawable/boder"
         app:layout_constraintStart_toEndOf="@+id/textView"
@@ -50,13 +51,14 @@
 
     <EditText
         android:id="@+id/editText2"
-        android:layout_width="136dp"
-        android:layout_height="126dp"
+        android:layout_width="180dp"
+        android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
         android:ems="10"
-
         android:gravity="start|top"
         android:inputType="textMultiLine"
+        android:lines="3"
+        android:maxLines="3"
         app:layout_constraintStart_toStartOf="@+id/textView2"
         app:layout_constraintTop_toBottomOf="@+id/textView2" />
 

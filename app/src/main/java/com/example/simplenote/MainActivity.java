@@ -56,7 +56,7 @@ public class MainActivity extends AppCompatActivity {
             noteList.addAll(notes);
             arrayAdapter.notifyDataSetChanged();
             Intent intent= new Intent(MainActivity.this,Main2Activity.class);
-            intent.putExtra("noteId",noteList.size());
+            intent.putExtra("noteId",noteList.size()+1);
             startActivity(intent);
             return true;
         }
